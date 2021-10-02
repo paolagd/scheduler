@@ -19,8 +19,7 @@ export default function Application(props) {
     interviewers: {},
   });
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-
+  const dailyAppointments = getAppointmentsForDay(state, state.day); 
   useEffect(() => {
     const days = axios.get("/api/days");
     const appointments = axios.get("/api/appointments");

@@ -1,17 +1,19 @@
+const getDay = function (state, day) {
+  return state.days.find((element) => element.name === day);
+};
+
 //Reviews days and extracts appointments for specific day
 export function getAppointmentsForDay(state, day) {
   if (!state.days) {
     return [];
   }
-  const dayAppointments = state.days.find((element) => element.name === day);
+  const dayAppointments = getDay(state, day);
   if (!dayAppointments) return [];
 
   //Reviews the Daily appointments returning the matching appointments information in the state
-  const appointments = dayAppointments.appointments.map((appointmentId) => {
-    if (state.appointments[appointmentId]) {
-      return state.appointments[appointmentId];
-    }
-  });
+  const appointments = dayAppointments.appointments
+    .map((appointmentId) => state.appointments[appointmentId])
+    .filter((appointment) => appointment);
 
   return appointments;
 }
@@ -34,15 +36,13 @@ export function getInterviewersForDay(state, day) {
   if (!state.days) {
     return [];
   }
-   
-  const dayInterviewers = state.days.find((element) => element.name === day); 
+
+  const dayInterviewers = getDay(state, day);
   if (!dayInterviewers || !dayInterviewers.interviewers) return [];
 
-  const interviewers = dayInterviewers.interviewers.map((interviewerId) => {
-    if (state.interviewers[interviewerId]) {
-      return state.interviewers[interviewerId];
-    }
-  });
+  const interviewers = dayInterviewers.interviewers
+    .map((interviewerId) => state.interviewers[interviewerId])
+    .filter((interviewer) => interviewer);
 
   return interviewers;
 }
