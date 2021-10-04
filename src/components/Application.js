@@ -19,7 +19,9 @@ export default function Application(props) {
     interviewers: {},
   });
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day); 
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
+  //Loads information from API and updates state
   useEffect(() => {
     const days = axios.get("/api/days");
     const appointments = axios.get("/api/appointments");
@@ -35,18 +37,39 @@ export default function Application(props) {
     });
   }, []);
 
+  //Updates current day being reviewed (sidebar)
   const setDay = (day) => setState({ ...state, day });
 
-  const schedule = dailyAppointments.map((appointment) => { 
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+ 
+    return axios.put(`/api/appointments/${id}`, { ...appointment }).then(() => {
+      setState({
+        ...state,
+        appointments,
+      });      
+    });
+  }
+
+  //Filters required data for each appointment - Returns array for Appointment components
+  const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     const interviewers = getInterviewersForDay(state, state.day);
- 
+
     return (
       <Appointment
         {...appointment}
         key={appointment.id}
         interview={interview}
         interviewers={interviewers}
+        bookInterview={bookInterview}
       />
     );
   });

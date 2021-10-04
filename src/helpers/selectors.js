@@ -2,7 +2,7 @@ const getDay = function (state, day) {
   return state.days.find((element) => element.name === day);
 };
 
-//Reviews days and extracts appointments for specific day
+//Reviews day and extracts appointments for specific day
 export function getAppointmentsForDay(state, day) {
   if (!state.days) {
     return [];
@@ -31,7 +31,7 @@ export function getInterview(state, interview) {
   }
 }
 
-//Reviews days and returns an array of interviewers for specific day
+//Reviews day and returns an array of interviewers for specific day
 export function getInterviewersForDay(state, day) {
   if (!state.days) {
     return [];
