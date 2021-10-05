@@ -1,4 +1,4 @@
-const getDay = function (state, day) {
+export function getDay (state, day) {
   return state.days.find((element) => element.name === day);
 };
 
