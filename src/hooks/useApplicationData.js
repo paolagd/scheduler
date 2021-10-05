@@ -12,7 +12,7 @@ export default function useApplicationData(baseState) {
       interviewers: {},
     }
   );
-  
+
   //Loads information from API and updates state
   useEffect(() => {
     const days = axios.get("/api/days");
@@ -40,52 +40,29 @@ export default function useApplicationData(baseState) {
       [id]: appointment,
     };
 
-    return axios
-      .put(`/api/appointments/${id}`, { ...appointment })
-      .then(() => {
-        setState({
-          ...state,
-          appointments,
-        });
-      })
-      .then(() => {
-        updateSpots();
-      });
+    return axios.put(`/api/appointments/${id}`, { ...appointment }).then(() => {
+      updateSpots(appointments);
+    });
   };
 
   //Deletes an interview from an appointment(appointment:id), setting the value to null.
   const deleteInterview = (id) => {
     const appointment = { ...state.appointments[id], interview: null };
     const appointments = { ...state.appointments, [id]: appointment };
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then(() => {
-        setState({
-          ...state,
-          appointments,
-        });
-      })
-      .then(() => {
-        updateSpots(false);
-      });
+    return axios.delete(`/api/appointments/${id}`).then(() => {
+      updateSpots(appointments);
+    });
   };
 
-  const updateSpots = (add = true) => {
+  const updateSpots = (updatedAppointments) => {
     const dayAppointments = getDay(state, state.day);
 
     const spots = dayAppointments.appointments
-      .map((appointmentId) => state.appointments[appointmentId])
+      .map((appointmentId) => updatedAppointments[appointmentId])
       .filter((appointment) => !appointment.interview);
 
     const dayIndex = dayAppointments.id - 1;
     let spotsAvailable = spots.length;
-
-    //if called from delete spots have to be reduced by 1
-    if (!add){
-      spotsAvailable+=1;
-    }else{
-      spotsAvailable-=1;
-    }
 
     //Creating new day with updated spots
     const updatedDay = {
@@ -97,7 +74,7 @@ export default function useApplicationData(baseState) {
     const days = [...state.days];
     days[dayIndex] = updatedDay;
 
-    setState((prev) => ({ ...prev, days }));
+    setState((prev) => ({ ...prev, days, appointments: updatedAppointments }));
   };
 
   //Updates current day being reviewed (sidebar)
