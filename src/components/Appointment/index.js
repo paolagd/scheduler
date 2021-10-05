@@ -15,6 +15,7 @@ const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
 const SAVING = "SAVING";
+const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
 const ERROR_SAVE = "ERROR_SAVE";
@@ -46,7 +47,7 @@ export default function Appointment(props) {
   const edit = () => transition(EDIT);
 
   const deleteInt = () => {
-    transition(SAVING, true);
+    transition(DELETING, true);
     deleteInterview(id)
       .then(() => {
         transition(EMPTY);
@@ -84,7 +85,8 @@ export default function Appointment(props) {
           onCancel={() => back()}
         />
       )}
-      {mode === SAVING && <Status message="Loading..." />}
+      {mode === SAVING && <Status message="Saving..." />}
+      {mode === DELETING && <Status message="Deleting..." />}
       {mode === CONFIRM && (
         <Confirm
           onConfirm={deleteInt}
