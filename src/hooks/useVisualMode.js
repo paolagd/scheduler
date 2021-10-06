@@ -13,7 +13,7 @@ export default function useVisualMode(initMode) {
     }
     setMode(newMode);
   };
- 
+
   const back = () => {
     setHistory((prev) => {
       if (prev.length > 1) {

@@ -62,7 +62,7 @@ export default function useApplicationData(baseState) {
       .filter((appointment) => !appointment.interview);
 
     const dayIndex = dayAppointments.id - 1;
-    let spotsAvailable = spots.length;
+    const spotsAvailable = spots.length;
 
     //Creating new day with updated spots
     const updatedDay = {

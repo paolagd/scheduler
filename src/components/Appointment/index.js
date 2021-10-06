@@ -27,19 +27,22 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
 
   const save = (name, interviewer) => {
-    const interview = {
-      student: name,
-      interviewer,
-    };
+    //avoids attempting to save if an interviewer was not selected
+    if (interviewer) {
+      const interview = {
+        student: name,
+        interviewer,
+      };
 
-    transition(SAVING);
-    bookInterview(id, interview)
-      .then(() => {
-        transition(SHOW);
-      })
-      .catch(() => {
-        transition(ERROR_SAVE , true);
-      });
+      transition(SAVING);
+      bookInterview(id, interview)
+        .then(() => {
+          transition(SHOW);
+        })
+        .catch(() => {
+          transition(ERROR_SAVE, true);
+        });
+    }
   };
 
   const confirm = () => transition(CONFIRM);

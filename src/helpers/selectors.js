@@ -1,6 +1,6 @@
-export function getDay (state, day) {
+export function getDay(state, day) {
   return state.days.find((element) => element.name === day);
-};
+}
 
 //Reviews day and extracts appointments for specific day
 export function getAppointmentsForDay(state, day) {
