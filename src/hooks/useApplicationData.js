@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import axios from "axios";
 
 import { getDay } from "helpers/selectors";
+import {
+  SET_DAY,
+  SET_APPLICATION_DATA,
+  SET_INTERVIEW,
+  reducer,
+} from "./reducers/applicationData";
 
 export default function useApplicationData(baseState) {
-  const [state, setState] = useState(
-    baseState || {
-      day: "Monday",
-      days: [],
-      appointments: {},
-      interviewers: {},
-    }
-  );
+  const initialState = baseState || {
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {},
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   //Loads information from API and updates state
   useEffect(() => {
@@ -20,12 +26,15 @@ export default function useApplicationData(baseState) {
     const interviewers = axios.get("/api/interviewers");
 
     Promise.all([days, appointments, interviewers]).then((all) => {
-      setState((prev) => ({
-        ...prev,
-        days: all[0].data,
-        appointments: all[1].data,
-        interviewers: all[2].data,
-      }));
+      const days = all[0].data;
+      const appointments = all[1].data;
+      const interviewers = all[2].data;
+      dispatch({
+        type: SET_APPLICATION_DATA,
+        days,
+        appointments,
+        interviewers,
+      });
     });
   }, []);
 
@@ -74,11 +83,11 @@ export default function useApplicationData(baseState) {
     const days = [...state.days];
     days[dayIndex] = updatedDay;
 
-    setState((prev) => ({ ...prev, days, appointments: updatedAppointments }));
+    dispatch({ type: SET_INTERVIEW, days, appointments: updatedAppointments });
   };
 
   //Updates current day being reviewed (sidebar)
-  const setDay = (day) => setState({ ...state, day });
+  const setDay = (day) => dispatch({ type: SET_DAY, day });
 
   return { state, setDay, bookInterview, deleteInterview };
 }
