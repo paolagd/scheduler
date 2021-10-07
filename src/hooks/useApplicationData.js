@@ -1,7 +1,6 @@
 import { useEffect, useReducer } from "react";
 import axios from "axios";
 
-import { getDay } from "helpers/selectors";
 import {
   SET_DAY,
   SET_APPLICATION_DATA,
@@ -50,7 +49,7 @@ export default function useApplicationData(baseState) {
     };
 
     return axios.put(`/api/appointments/${id}`, { ...appointment }).then(() => {
-      updateSpots(appointments);
+      dispatch({ type: SET_INTERVIEW, appointments });
     });
   };
 
@@ -59,31 +58,8 @@ export default function useApplicationData(baseState) {
     const appointment = { ...state.appointments[id], interview: null };
     const appointments = { ...state.appointments, [id]: appointment };
     return axios.delete(`/api/appointments/${id}`).then(() => {
-      updateSpots(appointments);
+      dispatch({ type: SET_INTERVIEW, appointments });
     });
-  };
-
-  const updateSpots = (updatedAppointments) => {
-    const dayAppointments = getDay(state, state.day);
-
-    const spots = dayAppointments.appointments
-      .map((appointmentId) => updatedAppointments[appointmentId])
-      .filter((appointment) => !appointment.interview);
-
-    const dayIndex = dayAppointments.id - 1;
-    const spotsAvailable = spots.length;
-
-    //Creating new day with updated spots
-    const updatedDay = {
-      ...state.days[dayIndex],
-      spots: spotsAvailable,
-    };
-
-    //New days array with updated information before updated the state
-    const days = [...state.days];
-    days[dayIndex] = updatedDay;
-
-    dispatch({ type: SET_INTERVIEW, days, appointments: updatedAppointments });
   };
 
   //Updates current day being reviewed (sidebar)
