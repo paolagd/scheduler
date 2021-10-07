@@ -8,6 +8,20 @@ It is also responsive, so you can review your appointments on your phone, comput
 
 ## How does it work?
 
+You can add, cancel and edit interviews very easily.
+
+### Adding an interview 
+
+!["Adding an interview"](https://github.com/paolagd/scheduler/blob/master/docs/add.gif?raw=true)
+
+### Cancelling an interview 
+
+!["Cancelling an interview"](https://github.com/paolagd/scheduler/blob/master/docs/delete.gif?raw=true)
+
+### Sneak peek
+ 
+!["App"](https://github.com/paolagd/scheduler/blob/master/docs/peek.gif?raw=true)
+ 
 ## Setup
 
 Install dependencies with `npm install`.
